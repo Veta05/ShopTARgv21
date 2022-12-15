@@ -1,11 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-
-namespace ShopTARgv21.Core.Domain
+﻿namespace ShopTARgv21.Core.Dto
 {
-	public class Spaceship
+	public class SpaceshipDto
 	{
-		[Key]
 		public Guid? Id { get; set; }
 		public string Name { get; set; }
 		public string ModelType { get; set; }
