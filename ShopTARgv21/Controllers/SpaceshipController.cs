@@ -169,7 +169,7 @@ namespace ShopTARgv21.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> DeleteConirmation(Guid id)
+		public async Task<IActionResult> DeleteConfirmation(Guid id)
 		{
 			var product = await _spaceshipServices.Delete(id);
 

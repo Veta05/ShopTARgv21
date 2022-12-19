@@ -9,48 +9,52 @@
     <hr />
     <dl class="row">
         <div class="form-group row">
-            <label asp-for="Id" class="col-sm-2 col-form-label"></label>
-            @Html.DisplayFor(model => model.Id)
+            <label asp-for="Id" class="col-sm-2 col-form-label" />
         </div>
+ 
         <div class="form-group row">
             <label asp-for="Name" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.Name)
         </div>
-        <dt class="col-sm-2">
+        <div class="form-group row">
+            <label asp-for="ModelType" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.ModelType)
-            master
-            master
-            master
-            master
-            master
-        </dt>
-        <dt class="col-sm-2">
+        </div>
+        <div class="form-group row">
+            <label asp-for="SpaceshipBuilder" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.SpaceshipBuilder)
-        </dt>
-        <dt class="col-sm-2">
+        </div>
+        <div class="form-group row">
+            <label asp-for="PlaceOfBuild" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.PlaceOfBuild)
-        </dt>
-        <dt class="col-sm-2">
+        </div>
+        <div class="form-group row">
+            <label asp-for="EnginePower" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.EnginePower)
-        </dt>
-        <dt class="col-sm-2">
+        </div>
+        <div class="form-group row">
+            <label asp-for="LiftUpToSpaceByTonn" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.LiftUpToSpaceByTonn)
-        </dt>
-        <dt class="col-sm-2">
+        </div>
+        <div class="form-group row">
+            <label asp-for="Crew" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.Crew)
-        </dt>
-        <dt class="col-sm-2">
+        </div>
+        <div class="form-group row">
+            <label asp-for="Passengers" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.Passengers)
-        </dt>
-        <dt class="col-sm-2">
+        </div>
+        <div class="form-group row">
+            <label asp-for="LaunchDate" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.LaunchDate)
-        </dt>
-        <dt class="col-sm-2">
+        </div>
+        <div class="form-group row">
+            <label asp-for="BuildOfDate" class="col-sm-2 col-form-label"></label>
             @Html.DisplayFor(model => model.BuildOfDate)
-        </dt>
+        </div>
     </dl>
 
-    <form asp-action="DeleteConfirmation">
+    <form asp-action="DeleteConfirmation" asp-route-id="@Model.Id">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" />
         <a asp-action="Index">Back to List</a>
