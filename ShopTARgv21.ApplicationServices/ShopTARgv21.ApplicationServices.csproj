@@ -19,4 +19,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ShopTARgv21.Core\ShopTARgv21.Core.csproj" />
+    <ProjectReference Include="..\ShopTARgv21.Data\ShopTARgv21.Data.csproj" />
+  </ItemGroup>
+
 </Project>
