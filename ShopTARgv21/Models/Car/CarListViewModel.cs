@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace ShopTARgv21.Models.Car
+﻿namespace ShopTARgv21.Models.Car
 {
-    public class CarListViewModel : Controller
+    public class CarListViewModel
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public Guid? Id { get; set; }
+        public string Owner { get; set; }
+        public string Model { get; set; }
+        public string Color { get; set; }
+        public DateTime Year { get; set; }
+        public int Passangers { get; set; }
     }
 }
