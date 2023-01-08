@@ -1,7 +1,12 @@
-﻿namespace ShopTARgv21.Models.Car
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+
+
+namespace ShopTARgv21.Core.Domain
 {
-    public class CarViewModel
+    public class Car
     {
+        [Key]
         public Guid? Id { get; set; }
         public string Owner { get; set; }
         public string Model { get; set; }

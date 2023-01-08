@@ -18,6 +18,7 @@ namespace ShopTARgv21
 			options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<ISpaceshipServices, SpaceshipServices>();
+            builder.Services.AddScoped<ICarServices, CarServices>();
 
 
             var app = builder.Build();

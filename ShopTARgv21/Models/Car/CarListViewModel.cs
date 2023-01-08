@@ -7,6 +7,6 @@
         public string Model { get; set; }
         public string Color { get; set; }
         public DateTime Year { get; set; }
-        public int Passangers { get; set; }
+        public int Passengers { get; set; }
     }
 }

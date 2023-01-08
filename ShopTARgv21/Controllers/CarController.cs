@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShopTARgv21.Core.Domain;
 using ShopTARgv21.Core.Dto;
 using ShopTARgv21.Core.ServiceInterface;
 using ShopTARgv21.Data;
@@ -8,7 +9,7 @@ namespace ShopTARgv21.Controllers
 {
     public class CarController : Controller
     {
-        private readonly ShopDbContext _context;
+        private readonly ShopDbContext _dbContext;
         private readonly ICarServices _carServices;
 
         public CarController
@@ -17,14 +18,14 @@ namespace ShopTARgv21.Controllers
                 ICarServices carServices
             )
         {
-            _context = context;
+            _dbContext = context;
             _carServices = carServices;
         }
 
         [HttpGet]
         public IActionResult Index()
         {
-            var result = _context.Car
+            var result = _dbContext.Car
                 .OrderByDescending(y => y.Year)
                 .Select(x => new CarListViewModel
                 {
@@ -33,7 +34,7 @@ namespace ShopTARgv21.Controllers
                     Model = x.Model,
                     Color = x.Color,
                     Year = x.Year,
-                    Passangers = x.Passangers
+                    Passengers = x.Passengers
                 });
 
             return View(result);
@@ -64,7 +65,6 @@ namespace ShopTARgv21.Controllers
                 Transmission = vm.Transmission,
                 Additions = vm.Additions,
                 Passengers = vm.Passengers,
-                Files = vm.Files,
             };
 
             var result = await _carServices.Create(dto);
@@ -87,7 +87,7 @@ namespace ShopTARgv21.Controllers
                 return NotFound();
             }
 
-            var vm = new carEditViewModel()
+            var vm = new CarEditViewModel()
             {
                 Id = car.Id,
                 Owner = car.Owner,
@@ -111,18 +111,18 @@ namespace ShopTARgv21.Controllers
         {
             var dto = new CarDto()
             {
-                Id = car.Id,
-                Owner = car.Owner,
-                Model = car.Model,
-                Color = car.Color,
-                Year = car.Year,
-                Registration = car.Registration,
-                VINcode = car.VINcode,
-                Weight = car.Weight,
-                Fuel = car.Fuel,
-                Transmission = car.Transmission,
-                Additions = car.Additions,
-                Passengers = car.Passengers,
+                Id = vm.Id,
+                Owner = vm.Owner,
+                Model = vm.Model,
+                Color = vm.Color,
+                Year = vm.Year,
+                Registration = vm.Registration,
+                VINcode = vm.VINcode,
+                Weight = vm.Weight,
+                Fuel = vm.Fuel,
+                Transmission = vm.Transmission,
+                Additions = vm.Additions,
+                Passengers = vm.Passengers,
             };
 
             var result = await _carServices.Update(dto);

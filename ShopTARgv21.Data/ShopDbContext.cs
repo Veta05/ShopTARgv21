@@ -10,7 +10,7 @@ namespace ShopTARgv21.Data
 		: base(options) { }
 
 		public DbSet<Spaceship> Spaceship { get; set; }
+        public DbSet<Car> Car { get; set; }
         public DbSet<FileToDatabase> FileToDatabase { get; set; }
-
     }
 }

@@ -1,6 +1,9 @@
-﻿namespace ShopTARgv21.Models.Car
+﻿using Microsoft.AspNetCore.Http;
+using ShopTARgv21.Core.Domain;
+
+namespace ShopTARgv21.Core.Dto
 {
-    public class CarViewModel
+    public class CarDto
     {
         public Guid? Id { get; set; }
         public string Owner { get; set; }

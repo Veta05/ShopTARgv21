@@ -13,7 +13,6 @@
         public string Fuel { get; set; }
         public string Transmission { get; set; }
         public string Additions { get; set; }
-        public string Passengers { get; set; }
-        public List<IFormFile> Files { get; set; }
+        public int Passengers { get; set; }
     }
 }
