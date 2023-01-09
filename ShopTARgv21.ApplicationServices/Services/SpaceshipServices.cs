@@ -24,7 +24,7 @@ namespace ShopTARgv21.ApplicationServices.Services
 			Spaceship spaceship = new Spaceship();
 			FileToDatabase file = new FileToDatabase();
 
-			spaceship.Id = dto.Id;
+			spaceship.Id = Guid.NewGuid();
 			spaceship.Name = dto.Name;
 			spaceship.ModelType = dto.ModelType;
 			spaceship.SpaceshipBuilder = dto.SpaceshipBuilder;
@@ -106,7 +106,7 @@ namespace ShopTARgv21.ApplicationServices.Services
 						{
 							Id = Guid.NewGuid (),
 							ImageTitle = photo.FileName,
-							SpaceshipId = Guid.NewGuid(),
+							SpaceshipId = domain.Id,
 						};
 
 						photo.CopyTo(target);
