@@ -3,20 +3,22 @@ using ShopTARgv21.Core.Domain;
 using ShopTARgv21.Core.Dto;
 using ShopTARgv21.Core.ServiceInterface;
 using ShopTARgv21.Data;
-using System.Reflection.Metadata.Ecma335;
 
 namespace ShopTARgv21.ApplicationServices.Services
 {
 	public class SpaceshipServices : ISpaceshipServices
 	{
 		private readonly ShopDbContext _context;
+		private readonly IFileServices _files;
 
 		public SpaceshipServices
 			(
-				ShopDbContext context
+				ShopDbContext context,
+				IFileServices files
 			)
 		{
 			_context = context;
+			_files = files;
 		}
 
 		public async Task<Spaceship> Create(SpaceshipDto dto)
@@ -41,7 +43,7 @@ namespace ShopTARgv21.ApplicationServices.Services
 
 			if(dto.Files != null)
 			{
-				file.ImageData = UploadFile(dto, spaceship);
+				_files.UploadFilesToDatabase(dto, spaceship);
 			}
 
 			await _context.Spaceship.AddAsync(spaceship);
@@ -61,7 +63,9 @@ namespace ShopTARgv21.ApplicationServices.Services
 		public async Task<Spaceship> Update(SpaceshipDto dto)
 		{
 
-			var spaceship = new Spaceship()
+            FileToDatabase file = new FileToDatabase();
+
+            var spaceship = new Spaceship()
 			{
 				Id = dto.Id,
 				Name = dto.Name,
@@ -78,7 +82,12 @@ namespace ShopTARgv21.ApplicationServices.Services
 				ModifiedAt = dto.ModifiedAt
 			};
 
-			_context.Spaceship.Update(spaceship);
+            if (dto.Files != null)
+            {
+                _files.UploadFilesToDatabase(dto, spaceship);
+            }
+
+            _context.Spaceship.Update(spaceship);
 			await _context.SaveChangesAsync();
 			return spaceship;
 		}
@@ -93,31 +102,5 @@ namespace ShopTARgv21.ApplicationServices.Services
 
 			return spaceship;
 		}
-
-		public byte[] UploadFile(SpaceshipDto dto, Spaceship domain)
-		{
-			if(dto.Files != null && dto.Files.Count > 0)
-			{
-				foreach (var photo in dto.Files)
-				{
-					using(var target = new MemoryStream())
-					{
-						FileToDatabase files = new FileToDatabase
-						{
-							Id = Guid.NewGuid (),
-							ImageTitle = photo.FileName,
-							SpaceshipId = domain.Id,
-						};
-
-						photo.CopyTo(target);
-						files.ImageData = target.ToArray();
-
-						_context.FileToDatabase.Add(files);
-					}
-				}
-
-			}
-            return null;
-        }
-	}
+    }
 }

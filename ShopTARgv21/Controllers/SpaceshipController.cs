@@ -11,15 +11,19 @@ namespace ShopTARgv21.Controllers
 	{
 		private readonly ShopDbContext _context;
 		private readonly ISpaceshipServices _spaceshipServices;
+		private readonly IFileServices _fileServices;
 
 		public SpaceshipController
 			(
 				ShopDbContext context,
-				ISpaceshipServices spaceshipServices
+				ISpaceshipServices spaceshipServices,
+				IFileServices fileServices
+			
 			)
 		{
 			_context = context;
 			_spaceshipServices = spaceshipServices;
+			_fileServices = fileServices;
 		}
 
 		[HttpGet]
@@ -146,8 +150,16 @@ namespace ShopTARgv21.Controllers
 				LaunchDate = vm.LaunchDate,
 				BuildOfDate = vm.BuildOfDate,
 				CreatedAt = vm.CreatedAt,
-				ModifiedAt = vm.ModifiedAt
-			};
+				ModifiedAt = vm.ModifiedAt,
+                Files = vm.Files,
+                Image = vm.Image.Select(x => new FileToDatabaseDto
+                {
+                    Id = x.ImageId,
+                    ImageData = x.ImageData,
+                    ImageTitle = x.ImageTitle,
+                    SpaceshipId = x.SpaceshipId,
+                }).ToArray(),
+            };
 
 			var result = await _spaceshipServices.Update(dto);
 
@@ -200,6 +212,21 @@ namespace ShopTARgv21.Controllers
 				return RedirectToAction(nameof(Index));
 			}
 
+			return RedirectToAction(nameof(Index));
+		}
+
+		[HttpPost]
+		public async Task<IActionResult>RemoveImage(ImageViewModel file)
+		{
+			var dto = new FileToDatabaseDto()
+			{
+				Id = file.ImageId
+			};
+			var image = await _fileServices.RemoveImage(dto);
+			if (image == null)
+			{
+				return RedirectToAction(nameof(Index));
+			}
 			return RedirectToAction(nameof(Index));
 		}
 	}

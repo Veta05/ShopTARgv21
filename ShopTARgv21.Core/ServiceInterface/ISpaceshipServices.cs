@@ -10,5 +10,7 @@ namespace ShopTARgv21.Core.ServiceInterface
 		Task<Spaceship> GetAsync(Guid id);
 		Task<Spaceship> Update(SpaceshipDto dto);
 		Task<Spaceship> Delete(Guid id);
-	}
+        
+
+    }
 }
