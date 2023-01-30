@@ -12,8 +12,8 @@ using ShopTARgv21.Data;
 namespace ShopTARgv21.Data.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20230109072007_FileToDatabase")]
-    partial class FileToDatabase
+    [Migration("20230123093946_Spaceship")]
+    partial class Spaceship
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,6 +42,8 @@ namespace ShopTARgv21.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SpaceshipId");
 
                     b.ToTable("FileToDatabase");
                 });
@@ -96,6 +98,18 @@ namespace ShopTARgv21.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Spaceship");
+                });
+
+            modelBuilder.Entity("ShopTARgv21.Core.Domain.FileToDatabase", b =>
+                {
+                    b.HasOne("ShopTARgv21.Core.Domain.Spaceship", null)
+                        .WithMany("FileToDatabases")
+                        .HasForeignKey("SpaceshipId");
+                });
+
+            modelBuilder.Entity("ShopTARgv21.Core.Domain.Spaceship", b =>
+                {
+                    b.Navigation("FileToDatabases");
                 });
 #pragma warning restore 612, 618
         }

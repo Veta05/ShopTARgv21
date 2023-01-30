@@ -62,7 +62,7 @@ namespace ShopTARgv21.ApplicationServices.Services
             {
                 var photoId = await _context.FileToDatabase
                     .Where (x=> x.Id == dtos.Id)
-                    .FirstOrDefaultAsync(x => x.Id == dtos.Id);
+                    .FirstOrDefaultAsync();
 
                 _context.FileToDatabase.Remove(photoId);
                 await _context.SaveChangesAsync();
