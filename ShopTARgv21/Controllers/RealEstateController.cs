@@ -126,49 +126,45 @@ namespace ShopTARgv21.Controllers
             return RedirectToAction(nameof(Index), vm);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var realEstate = await _realEstateServices.GetAsync(id);
+
+            if (realEstate == null)
+            {
+                return NotFound();
+            }
+
+            var vm = new RealEstateListViewModel()
+            {
+                Id = realEstate.Id,
+                Address = realEstate.Address,
+                City = realEstate.City,
+                County = realEstate.County,
+                BuildingType = realEstate.BuildingType,
+                Size = realEstate.Size,
+                RoomNumber = realEstate.RoomNumber,
+                Price = realEstate.Price,
+                Contact = realEstate.Contact,
+                CreatedAt = realEstate.CreatedAt,
+                ModifiedAt = realEstate.ModifiedAt
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmation(Guid id)
+        {
+            var product = await _realEstateServices.Delete(id);
+
+            if (product == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
-
-
-//        [HttpGet]
-//        public async Task<IActionResult> Delete(Guid id)
-//        {
-//            var car = await _realEstateServices.GetAsync(id);
-
-//            if (car == null)
-//            {
-//                return NotFound();
-//            }
-
-//            var vm = new RealEstateListViewModel()
-//            {
-//                Id = realEstate.Id,
-//                Address = realEstate.Address,
-//                City = realEstate.City,
-//                County = realEstate.County,
-//                BuildingType = realEstate.BuildingType,
-//                Size = realEstate.Size,
-//                RoomNumber = realEstate.RoomNumber,
-//                Price = realEstate.Price,
-//                Contact = realEstate.Contact,
-//                CreatedAt = realEstate.CreatedAt,
-//                ModifiedAt = realEstate.ModifiedAt
-//            };
-
-//            return View(vm);
-//        }
-
-//        [HttpPost]
-//        public async Task<IActionResult> DeleteConfirmation(Guid id)
-//        {
-//            var product = await _realEstateServices.Delete(id);
-
-//            if (product == null)
-//            {
-//                return RedirectToAction(nameof(Index));
-//            }
-
-//            return RedirectToAction(nameof(Index));
-//        }
-//    }
-//}

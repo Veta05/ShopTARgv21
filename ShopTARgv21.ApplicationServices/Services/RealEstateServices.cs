@@ -40,9 +40,15 @@ namespace ShopTARgv21.ApplicationServices.Services
             return realEstate;
         }
 
-        public Task<RealEstate> Delete(Guid id)
+        public async Task<RealEstate> Delete(Guid id)
         {
+            var realEstate = await _context.RealEstate
+                .FirstOrDefaultAsync(x => x.Id == id);
 
+            _context.RealEstate.Remove(realEstate);
+            await _context.SaveChangesAsync();
+
+            return realEstate;
         }
 
         public async Task<RealEstate> GetAsync(Guid id)
@@ -58,7 +64,7 @@ namespace ShopTARgv21.ApplicationServices.Services
 
             var realEstate = new RealEstate()
             {
-                Id = (Guid)dto.Id,
+                Id = dto.Id,
                 Address = dto.Address,
                 City = dto.City,
                 County = dto.County,
