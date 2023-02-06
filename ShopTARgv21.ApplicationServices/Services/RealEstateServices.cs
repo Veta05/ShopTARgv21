@@ -1,4 +1,5 @@
-﻿using ShopTARgv21.Core.Domain;
+﻿using Microsoft.EntityFrameworkCore;
+using ShopTARgv21.Core.Domain;
 using ShopTARgv21.Core.Dto;
 using ShopTARgv21.Core.ServiceInterface;
 using ShopTARgv21.Data;
@@ -36,6 +37,44 @@ namespace ShopTARgv21.ApplicationServices.Services
 
             await _context.RealEstate.AddAsync(realEstate);
             await _context.SaveChangesAsync();
+            return realEstate;
+        }
+
+        public Task<RealEstate> Delete(Guid id)
+        {
+
+        }
+
+        public async Task<RealEstate> GetAsync(Guid id)
+        {
+            var result = await _context.RealEstate
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return result;
+        }
+
+        public async Task<RealEstate> Update(RealEstateDto dto)
+        {
+
+            var realEstate = new RealEstate()
+            {
+                Id = (Guid)dto.Id,
+                Address = dto.Address,
+                City = dto.City,
+                County = dto.County,
+                BuildingType = dto.BuildingType,
+                Size = dto.Size,
+                RoomNumber = dto.RoomNumber,
+                Price = dto.Price,
+                Contact = dto.Contact,
+                CreatedAt = dto.CreatedAt,
+                ModifiedAt = dto.ModifiedAt
+            };
+
+           
+            _context.RealEstate.Update(realEstate);
+            await _context.SaveChangesAsync();
+
             return realEstate;
         }
     }
