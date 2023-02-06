@@ -12,5 +12,8 @@ namespace ShopTARgv21.Core.ServiceInterface
     public interface IRealEstateServices : IApplicationServices
     {
         Task<RealEstate> Create(RealEstateDto dto);
+        Task <RealEstate> Delete(Guid id);
+        Task<RealEstate> GetAsync(Guid id);
+        Task <RealEstate> Update(RealEstateDto dto);
     }
 }

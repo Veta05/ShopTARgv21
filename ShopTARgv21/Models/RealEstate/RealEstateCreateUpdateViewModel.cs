@@ -15,7 +15,7 @@ namespace ShopTARgv21.Models.RealEstate
         public string Contact { get; set; }
 
         // Only in DB
-        public DateTime MofiedAt { get; set; }
+        public DateTime ModifiedAt { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
