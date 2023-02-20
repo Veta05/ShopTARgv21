@@ -1,4 +1,4 @@
-﻿@model ShopTARgv21.Models.RealEstate.RealEstateListViewModel
+﻿@model ShopTARgv21.Models.RealEstate.RealEstateDeleteViewModel
 
 <h1>Delete</h1>
 
@@ -45,6 +45,11 @@
             @Html.DisplayFor(model => model.Contact)
         </div>
     </dl>
+
+    @foreach (var images in Model.FileToApis)
+    {
+        <partial name="_Images" model="images" />
+    }
 
 
     <form asp-action="DeleteConfirmation" asp-route-id="@Model.Id">

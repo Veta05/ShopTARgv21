@@ -3,21 +3,19 @@ using ShopTARgv21.Core.Domain;
 using ShopTARgv21.Core.Dto;
 using ShopTARgv21.Core.ServiceInterface;
 using ShopTARgv21.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ShopTARgv21.ApplicationServices.Services
 {
     public class FileServices : IFileServices
     {
         private readonly ShopDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public FileServices(ShopDbContext context)
+        public FileServices(ShopDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         public void UploadFilesToDatabase(SpaceshipDto dto, Spaceship domain)
@@ -61,12 +59,80 @@ namespace ShopTARgv21.ApplicationServices.Services
             foreach (var dtos in dto)
             {
                 var photoId = await _context.FileToDatabase
-                    .Where (x=> x.Id == dtos.Id)
+                    .Where(x => x.Id == dtos.Id)
                     .FirstOrDefaultAsync();
 
                 _context.FileToDatabase.Remove(photoId);
                 await _context.SaveChangesAsync();
 
+            }
+
+            return null;
+        }
+        public void UploadFileToApi(RealEstateDto dto, RealEstate domain)
+        {
+            if (dto.Files != null && dto.Files.Count > 0)
+            {
+                if (!Directory.Exists(_env.WebRootPath + "\\multipleFileUpload\\"))
+                {
+                    Directory.CreateDirectory(_env.WebRootPath + "\\multipleFileUpload\\");
+                }
+                foreach (var file in dto.Files)
+                {
+                    string uploadsFolder = Path.Combine(_env.WebRootPath, "multipleFileUpload");
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                        FileToApi path = new FileToApi()
+                        {
+                            Id = Guid.NewGuid(),
+                            FilePath = uniqueFileName,
+                            RealEstateId = domain.Id,
+                        };
+
+                        _context.FileToApi.AddAsync(path);
+                    }
+                }
+            }
+        }
+
+        public async Task<FileToApi> RemoveImageFromApi(FileToApiDto dto)
+        {
+            var imageId = await _context.FileToApi
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            var filePath = _env.WebRootPath + "\\multipleFileUpload\\" + imageId.FilePath;
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            _context.FileToApi.Remove(imageId);
+            await _context.SaveChangesAsync();
+
+            return imageId;
+        }
+
+        public async Task<List<FileToApi>> RemoveImagesFromApi(FileToApiDto[] dtos)
+        {
+            foreach (var dto in dtos) 
+            {
+                var imageId = await _context.FileToApi
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+                var filePath = _env.WebRootPath + "\\multipleFileUpload\\" + imageId.FilePath;
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                _context.FileToApi.Remove(imageId);
+                await _context.SaveChangesAsync();
             }
 
             return null;

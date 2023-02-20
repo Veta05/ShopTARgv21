@@ -14,11 +14,16 @@ namespace ShopTARgv21.ApplicationServices.Services
     public class RealEstateServices : IRealEstateServices
     {
         private readonly ShopDbContext _context;
-        public RealEstateServices(ShopDbContext context)
+        private readonly IFileServices _fileServices;
+        public RealEstateServices
+            (
+                ShopDbContext context,
+                IFileServices fileServices
+            )
         {
             _context = context;
+            _fileServices = fileServices;
         }
-
         public async Task<RealEstate> Create(RealEstateDto dto)
         {
             RealEstate realEstate = new RealEstate();
@@ -32,8 +37,9 @@ namespace ShopTARgv21.ApplicationServices.Services
             realEstate.RoomNumber = dto.RoomNumber;
             realEstate.County = dto.County;
             realEstate.Size = dto.Size;
-            realEstate.CreatedAt = dto.CreatedAt;
-            realEstate.ModifiedAt = dto.ModifiedAt;
+            realEstate.CreatedAt = DateTime.Now;
+            realEstate.ModifiedAt = DateTime.Now;
+            _fileServices.UploadFileToApi(dto, realEstate);
 
             await _context.RealEstate.AddAsync(realEstate);
             await _context.SaveChangesAsync();
@@ -42,13 +48,23 @@ namespace ShopTARgv21.ApplicationServices.Services
 
         public async Task<RealEstate> Delete(Guid id)
         {
-            var realEstate = await _context.RealEstate
+            var realEstateId = await _context.RealEstate
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            _context.RealEstate.Remove(realEstate);
+            var images = await _context.FileToApi
+                .Where(x => x.RealEstateId == id)
+                .Select(y => new FileToApiDto
+                {
+                    Id = y.Id,
+                    RealEstateId = y.RealEstateId,
+                    FilePath = y.FilePath
+                }).ToArrayAsync();
+
+            await _fileServices.RemoveImagesFromApi(images);
+            _context.RealEstate.Remove(realEstateId);
             await _context.SaveChangesAsync();
 
-            return realEstate;
+            return realEstateId;
         }
 
         public async Task<RealEstate> GetAsync(Guid id)
@@ -74,10 +90,11 @@ namespace ShopTARgv21.ApplicationServices.Services
                 Price = dto.Price,
                 Contact = dto.Contact,
                 CreatedAt = dto.CreatedAt,
-                ModifiedAt = dto.ModifiedAt
+                ModifiedAt = DateTime.Now
             };
 
-           
+            _fileServices.UploadFileToApi(dto, realEstate);
+
             _context.RealEstate.Update(realEstate);
             await _context.SaveChangesAsync();
 

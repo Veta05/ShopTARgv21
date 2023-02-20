@@ -3,7 +3,7 @@ using Shop.Models.RealEstate;
 
 namespace ShopTARgv21.Models.RealEstate
 {
-    public class RealEstateListViewModel
+    public class RealEstateDeleteViewModel
     {
         public Guid? Id { get; set; }
         public string Address { get; set; }
@@ -14,7 +14,7 @@ namespace ShopTARgv21.Models.RealEstate
         public int RoomNumber { get; set; }
         public int Price { get; set; }
         public string Contact { get; set; }
-        public List<IFormFile> Files { get; set; }
+
         public List<FileToApiViewModel> FileToApis { get; set; } = new List<FileToApiViewModel>();
 
         // Only in DB

@@ -3,6 +3,12 @@ using ShopTARgv21.Core.Dto;
 using ShopTARgv21.Core.ServiceInterface;
 using ShopTARgv21.Data;
 using ShopTARgv21.Models.RealEstate;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System.Runtime.CompilerServices;
+using Shop.Models.RealEstate;
+using Microsoft.EntityFrameworkCore;
+using ShopTARgv21.ApplicationServices.Services;
+using ShopTARgv21.Models.Spaceship;
 
 namespace ShopTARgv21.Controllers
 {
@@ -10,10 +16,12 @@ namespace ShopTARgv21.Controllers
     {
         private readonly ShopDbContext _context;
         private readonly IRealEstateServices _realEstateServices;
-        public RealEstateController(ShopDbContext context, IRealEstateServices realEstate)
+        private readonly IFileServices _fileServices;
+        public RealEstateController(ShopDbContext context, IRealEstateServices realEstate, IFileServices fileServices)
         {
             _context = context;
             _realEstateServices = realEstate;
+            _fileServices = fileServices;
         }
 
         [HttpGet]
@@ -58,7 +66,16 @@ namespace ShopTARgv21.Controllers
                 County = vm.County,
                 RoomNumber = vm.RoomNumber,
                 CreatedAt = vm.CreatedAt,
-                ModifiedAt = vm.ModifiedAt
+                ModifiedAt = vm.ModifiedAt,
+                Files = vm.Files,
+                FilesToApi = vm.FileToApis
+                    .Select(x => new FileToApiDto
+                    {
+                        Id = x.PhotoId,
+                        FilePath = x.FilePath,
+                        RealEstateId = x.RealEstateId,
+
+                    }).ToArray()
             };
 
             var result = await _realEstateServices.Create(dto);
@@ -81,21 +98,28 @@ namespace ShopTARgv21.Controllers
                 return NotFound();
             }
 
-            var vm = new RealEstateCreateUpdateViewModel()
-            {
-                Id = realEstate.Id,
-                Address = realEstate.Address,
-                City = realEstate.City,
-                County = realEstate.County,
-                BuildingType = realEstate.BuildingType,
-                Size = realEstate.Size,
-                RoomNumber = realEstate.RoomNumber,
-                Price = realEstate.Price,
-                Contact = realEstate.Contact,
-                CreatedAt = realEstate.CreatedAt,
-                ModifiedAt = realEstate.ModifiedAt
+            var files = await _context.FileToApi
+                .Where(x => x.RealEstateId == id)
+                .Select(y => new FileToApiViewModel
+                {
+                    FilePath = y.FilePath,
+                    PhotoId = y.Id
+                })
+                .ToArrayAsync();
 
-            };
+            var vm = new RealEstateCreateUpdateViewModel();
+            vm.Id = realEstate.Id;
+            vm.Address = realEstate.Address;
+            vm.City = realEstate.City;
+            vm.County = realEstate.County;
+            vm.BuildingType = realEstate.BuildingType;
+            vm.Size = realEstate.Size;
+            vm.RoomNumber = realEstate.RoomNumber;
+            vm.Price = realEstate.Price;
+            vm.Contact = realEstate.Contact;
+            vm.CreatedAt = realEstate.CreatedAt;
+            vm.ModifiedAt = realEstate.ModifiedAt;
+            vm.FileToApis.AddRange(files);
 
             return View("CreateUpdate", vm);
         }
@@ -113,7 +137,17 @@ namespace ShopTARgv21.Controllers
                 Price = vm.Price,
                 BuildingType = vm.BuildingType,
                 County = vm.County,
-                RoomNumber = vm.RoomNumber
+                RoomNumber = vm.RoomNumber,
+                ModifiedAt = vm.ModifiedAt,
+                CreatedAt= vm.CreatedAt,
+                Files= vm.Files,
+                FilesToApi = vm.FileToApis
+                    .Select(x => new FileToApiDto
+                    {
+                        Id = x.PhotoId,
+                        FilePath= x.FilePath,
+                        RealEstateId=x.RealEstateId
+                    }).ToArray()
             };
 
             var result = await _realEstateServices.Update(dto);
@@ -136,23 +170,33 @@ namespace ShopTARgv21.Controllers
                 return NotFound();
             }
 
-            var vm = new RealEstateListViewModel()
-            {
-                Id = realEstate.Id,
-                Address = realEstate.Address,
-                City = realEstate.City,
-                County = realEstate.County,
-                BuildingType = realEstate.BuildingType,
-                Size = realEstate.Size,
-                RoomNumber = realEstate.RoomNumber,
-                Price = realEstate.Price,
-                Contact = realEstate.Contact,
-                CreatedAt = realEstate.CreatedAt,
-                ModifiedAt = realEstate.ModifiedAt
-            };
+            var files = await _context.FileToApi
+                .Where(x => x.RealEstateId == id)
+                .Select(y => new FileToApiViewModel
+                {
+                    FilePath = y.FilePath,
+                    PhotoId = y.Id
+                })
+                .ToArrayAsync();
+
+            var vm = new RealEstateDeleteViewModel();
+
+            vm.Id = realEstate.Id;
+            vm.Address = realEstate.Address;
+            vm.City = realEstate.City;
+            vm.County = realEstate.County;
+            vm.BuildingType = realEstate.BuildingType;
+            vm.Size = realEstate.Size;
+            vm.RoomNumber = realEstate.RoomNumber;
+            vm.Price = realEstate.Price;
+            vm.Contact = realEstate.Contact;
+            vm.CreatedAt = realEstate.CreatedAt;
+            vm.ModifiedAt = realEstate.ModifiedAt;
+            vm.FileToApis.AddRange(files);
 
             return View(vm);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmation(Guid id)
@@ -164,6 +208,22 @@ namespace ShopTARgv21.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveImage(ImageViewModel file)
+        {
+            var dto = new FileToApiDto()
+            {
+                Id = file.ImageId
+            };
+
+            var image = await _fileServices.RemoveImageFromApi(dto);
+            if (image == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             return RedirectToAction(nameof(Index));
         }
     }

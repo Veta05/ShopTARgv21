@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shop.Models.RealEstate;
+using ShopTARgv21.Core.Domain;
 
 namespace ShopTARgv21.Models.RealEstate
 {
@@ -13,6 +15,8 @@ namespace ShopTARgv21.Models.RealEstate
         public int RoomNumber { get; set; }
         public int Price { get; set; }
         public string Contact { get; set; }
+        public List<IFormFile> Files { get; set; }
+        public List<FileToApiViewModel> FileToApis { get; set; } = new List<FileToApiViewModel>();
 
         // Only in DB
         public DateTime ModifiedAt { get; set; }
