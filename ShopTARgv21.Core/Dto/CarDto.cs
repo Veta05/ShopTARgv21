@@ -17,5 +17,8 @@ namespace ShopTARgv21.Core.Dto
         public string Transmission { get; set; }
         public string Additions { get; set; }
         public int Passengers { get; set; }
+        public List<IFormFile> Files { get; set; }
+        public IEnumerable<FileToDatabaseDto> Image { get; set; }
+               = new List<FileToDatabaseDto>();
     }
 }

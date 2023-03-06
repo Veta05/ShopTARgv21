@@ -10,18 +10,22 @@ namespace ShopTARgv21.ApplicationServices.Services
     public class CarServices : ICarServices
     {
         private readonly ShopDbContext _dbContext;
+        private readonly IFileServices _files;
 
         public CarServices
             (
-                ShopDbContext context
+                ShopDbContext context,
+                IFileServices files
             )
         {
             _dbContext = context;
+            _files = files;
         }
 
         public async Task<Car> Create(CarDto dto)
         {
             Car car = new Car();
+            FileToDatabase file = new FileToDatabase();
 
             car.Id = dto.Id;
             car.Owner = dto.Owner;
@@ -36,6 +40,10 @@ namespace ShopTARgv21.ApplicationServices.Services
             car.Additions = dto.Additions;
             car.Passengers = dto.Passengers;
 
+            if (dto.Files != null)
+            {
+                _files.UploadFilesToDatabase(dto, car);
+            }
 
             await _dbContext.Car.AddAsync(car);
             await _dbContext.SaveChangesAsync();
@@ -53,6 +61,7 @@ namespace ShopTARgv21.ApplicationServices.Services
 
         public async Task<Car> Update(CarDto dto)
         {
+            FileToDatabase file = new FileToDatabase();
 
             var car = new Car()
             {
@@ -70,6 +79,11 @@ namespace ShopTARgv21.ApplicationServices.Services
                 Passengers = dto.Passengers
             };
 
+            if (dto.Files != null)
+            {
+                _files.UploadFilesToDatabase(dto, car);
+            }
+
             _dbContext.Car.Update(car);
             await _dbContext.SaveChangesAsync();
             return car;
@@ -77,13 +91,25 @@ namespace ShopTARgv21.ApplicationServices.Services
 
         public async Task<Car> Delete(Guid id)
         {
-            var car = await _dbContext.Car
+            var carId = await _dbContext.Car
+                .Include(x => x.FileToDatabases)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            _dbContext.Car.Remove(car);
+            var photos = await _dbContext.FileToDatabase
+                .Where(x => x.carId == id)
+                .Select(y => new FileToDatabaseDto
+                {
+                    Id = y.Id,
+                    ImageTitle = y.ImageTitle,
+                    carId = y.carId
+                })
+                .ToArrayAsync();
+
+            await _files.RemoveImagesFromDatabase(photos);
+            _dbContext.Car.Remove(carId);
             await _dbContext.SaveChangesAsync();
 
-            return car;
+            return carId;
         }
     }
 }

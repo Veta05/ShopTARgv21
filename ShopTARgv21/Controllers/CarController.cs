@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ShopTARgv21.Core.Domain;
 using ShopTARgv21.Core.Dto;
 using ShopTARgv21.Core.ServiceInterface;
@@ -11,15 +12,18 @@ namespace ShopTARgv21.Controllers
     {
         private readonly ShopDbContext _dbContext;
         private readonly ICarServices _carServices;
+        private readonly IFileServices _fileServices;
 
         public CarController
             (
                 ShopDbContext context,
-                ICarServices carServices
+                ICarServices carServices,
+                IFileServices fileServices
             )
         {
             _dbContext = context;
             _carServices = carServices;
+            _fileServices = fileServices;
         }
 
         [HttpGet]
@@ -65,6 +69,14 @@ namespace ShopTARgv21.Controllers
                 Transmission = vm.Transmission,
                 Additions = vm.Additions,
                 Passengers = vm.Passengers,
+                Files = vm.Files,
+                Image = vm.Image.Select(x => new FileToDatabaseDto
+                {
+                    Id = x.ImageId,
+                    ImageData = x.ImageData,
+                    ImageTitle = x.ImageTitle,
+                    CarId = x.CarId,
+                }).ToArray(),
             };
 
             var result = await _carServices.Create(dto);
@@ -87,21 +99,33 @@ namespace ShopTARgv21.Controllers
                 return NotFound();
             }
 
-            var vm = new CarEditViewModel()
-            {
-                Id = car.Id,
-                Owner = car.Owner,
-                Model = car.Model,
-                Color = car.Color,
-                Year = car.Year,
-                Registration = car.Registration,
-                VINcode = car.VINcode,
-                Weight = car.Weight,
-                Fuel = car.Fuel,
-                Transmission = car.Transmission,
-                Additions = car.Additions,
-                Passengers = car.Passengers,
-            };
+            var photos = await _dbContext.FileToDatabase
+                .Where(x => x.CarId == id)
+                .Select(y => new ImageViewModel
+                {
+                    ImageData = y.ImageData,
+                    ImageId = y.Id,
+                    Image = string.Format("data:image/gif;base64, {0}", Convert.ToBase64String(y.ImageData)),
+                    ImageTitle = y.ImageTitle,
+                    CarId = y.Id
+                })
+                .ToArrayAsync();
+
+            var vm = new CarEditViewModel();
+
+            vm.Id = car.Id;
+            vm.Owner = car.Owner;
+            vm.Model = car.Model;
+            vm.Color = car.Color;
+            vm.Year = car.Year;
+            vm.Registration = car.Registration;
+            vm.VINcode = car.VINcode;
+            vm.Weight = car.Weight;
+            vm.Fuel = car.Fuel;
+            vm.Transmission = car.Transmission;
+            vm.Additions = car.Additions;
+            vm.Passengers = car.Passengers;
+            vm.Image.AddRange(photos);
 
             return View("CreateUpdate", vm);
         }
@@ -123,6 +147,15 @@ namespace ShopTARgv21.Controllers
                 Transmission = vm.Transmission,
                 Additions = vm.Additions,
                 Passengers = vm.Passengers,
+
+                Files = vm.Files,
+                Image = vm.Image.Select(x => new FileToDatabaseDto
+                {
+                    Id = x.ImageId,
+                    ImageData = x.ImageData,
+                    ImageTitle = x.ImageTitle,
+                    CarId = x.CarId,
+                }).ToArray(),
             };
 
             var result = await _carServices.Update(dto);
@@ -146,21 +179,32 @@ namespace ShopTARgv21.Controllers
                 return NotFound();
             }
 
-            var vm = new CarViewModel()
-            {
-                Id = car.Id,
-                Owner = car.Owner,
-                Model = car.Model,
-                Color = car.Color,
-                Year = car.Year,
-                Registration = car.Registration,
-                VINcode = car.VINcode,
-                Weight = car.Weight,
-                Fuel = car.Fuel,
-                Transmission = car.Transmission,
-                Additions = car.Additions,
-                Passengers = car.Passengers,
-            };
+            var photos = await _dbContext.FileToDatabase
+                .Where(x => x.CarId == id)
+                .Select(y => new ImageViewModel
+                {
+                    ImageData = y.ImageData,
+                    ImageId = y.Id,
+                    Image = string.Format("data:image/gif;base64, {0}", Convert.ToBase64String(y.ImageData)),
+                    ImageTitle = y.ImageTitle,
+                    CarId = y.Id
+                })
+                .ToArrayAsync();
+
+            var vm = new CarViewModel();
+
+            vm.Id = car.Id;
+            vm.Owner = car.Owner;
+            vm.Model = car.Model;
+            vm.Color = car.Color;
+            vm.Year = car.Year;
+            vm.Registration = car.Registration;
+            vm.VINcode = car.VINcode;
+            vm.Weight = car.Weight;
+            vm.Fuel = car.Fuel;
+            vm.Transmission = car.Transmission;
+            vm.Additions = car.Additions;
+            vm.Passengers = car.Passengers;
 
             return View(vm);
         }
@@ -175,6 +219,22 @@ namespace ShopTARgv21.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveImage(ImageViewModel file)
+        {
+            var dto = new FileToDatabaseDto()
+            {
+                Id = file.ImageId
+            };
+
+            var image = await _fileServices.RemoveImage(dto);
+            if (image == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
             return RedirectToAction(nameof(Index));
         }
     }

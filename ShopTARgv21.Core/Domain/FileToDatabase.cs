@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace ShopTARgv21.Core.Domain
 {
     public class FileToDatabase
     {
+        public Guid carId;
+
         public Guid Id { get; set; }
         public string ImageTitle { get; set; }
         public byte[] ImageData { get; set; }
-        public Guid? SpaceshipId { get; set; }
+        public Guid? CarId { get; set; }
     }
 }

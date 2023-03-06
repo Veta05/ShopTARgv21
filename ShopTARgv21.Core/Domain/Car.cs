@@ -19,5 +19,6 @@ namespace ShopTARgv21.Core.Domain
         public string Transmission { get; set; }
         public string Additions { get; set; }
         public int Passengers { get; set; }
+        public IEnumerable<FileToDatabase> FileToDatabases { get; set; } = new List<FileToDatabase>();
     }
 }
