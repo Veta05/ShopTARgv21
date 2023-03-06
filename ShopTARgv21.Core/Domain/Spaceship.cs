@@ -19,7 +19,7 @@ namespace ShopTARgv21.Core.Domain
 		public DateTime LaunchDate { get; set; }
 		public DateTime BuildOfDate { get; set; }
 
-		public IEnumerable<FileToDatabase> FileToDatabases { get; set; } = new List<FileToDatabase>();
+		//public IEnumerable<FileToDatabase> FileToDatabases { get; set; } = new List<FileToDatabase>();
 
 		public DateTime CreatedAt { get; set; }
 		public DateTime ModifiedAt { get; set; }

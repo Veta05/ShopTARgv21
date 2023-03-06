@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv21", "ShopTARgv21\ShopTARgv21.csproj", "{DE649607-1267-45AF-81C1-51AB2261FBD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopTARgv21", "ShopTARgv21\ShopTARgv21.csproj", "{DE649607-1267-45AF-81C1-51AB2261FBD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv21.ApplicationServices", "ShopTARgv21.ApplicationServices\ShopTARgv21.ApplicationServices.csproj", "{12B609FF-4146-4A35-ADB6-5BDE225A82E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopTARgv21.ApplicationServices", "ShopTARgv21.ApplicationServices\ShopTARgv21.ApplicationServices.csproj", "{12B609FF-4146-4A35-ADB6-5BDE225A82E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv21.Core", "ShopTARgv21.Core\ShopTARgv21.Core.csproj", "{C9CC7AC0-24DF-456A-8C01-CA82653F18FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopTARgv21.Core", "ShopTARgv21.Core\ShopTARgv21.Core.csproj", "{C9CC7AC0-24DF-456A-8C01-CA82653F18FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv21.Data", "ShopTARgv21.Data\ShopTARgv21.Data.csproj", "{66304739-1B5F-45F5-AF0B-6CAEA043AA47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopTARgv21.Data", "ShopTARgv21.Data\ShopTARgv21.Data.csproj", "{66304739-1B5F-45F5-AF0B-6CAEA043AA47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv21.SpaceshipTest", "ShopTARgv21.SpaceshipTest\ShopTARgv21.SpaceshipTest.csproj", "{825C2454-BD05-4D8F-9DBD-25FB4BC36BC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{66304739-1B5F-45F5-AF0B-6CAEA043AA47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66304739-1B5F-45F5-AF0B-6CAEA043AA47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66304739-1B5F-45F5-AF0B-6CAEA043AA47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{825C2454-BD05-4D8F-9DBD-25FB4BC36BC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{825C2454-BD05-4D8F-9DBD-25FB4BC36BC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{825C2454-BD05-4D8F-9DBD-25FB4BC36BC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{825C2454-BD05-4D8F-9DBD-25FB4BC36BC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

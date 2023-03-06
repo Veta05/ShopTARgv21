@@ -43,7 +43,7 @@ namespace ShopTARgv21.ApplicationServices.Services
 
 			if(dto.Files != null)
 			{
-				_files.UploadFilesToDatabase(dto, spaceship);
+				file.ImageData = _files.UploadFilesToDatabase(dto, spaceship);
 			}
 
 			await _context.Spaceship.AddAsync(spaceship);
@@ -95,7 +95,7 @@ namespace ShopTARgv21.ApplicationServices.Services
 		public async Task<Spaceship> Delete(Guid id)
 		{
 			var spaceshipId = await _context.Spaceship
-				.Include(x => x.FileToDatabases)
+				//.Include(x => x.FileToDatabases)
 				.FirstOrDefaultAsync(x => x.Id == id);
 
 			var photos = await _context.FileToDatabase
