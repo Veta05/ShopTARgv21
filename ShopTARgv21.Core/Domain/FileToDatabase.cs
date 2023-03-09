@@ -3,7 +3,6 @@ namespace ShopTARgv21.Core.Domain
 {
     public class FileToDatabase
     {
-        public Guid carId;
 
         public Guid Id { get; set; }
         public string ImageTitle { get; set; }

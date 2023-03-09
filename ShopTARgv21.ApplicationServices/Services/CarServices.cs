@@ -27,7 +27,7 @@ namespace ShopTARgv21.ApplicationServices.Services
             Car car = new Car();
             FileToDatabase file = new FileToDatabase();
 
-            car.Id = dto.Id;
+            car.Id = Guid.NewGuid();
             car.Owner = dto.Owner;
             car.Model = dto.Model;
             car.Color = dto.Color;
@@ -96,12 +96,12 @@ namespace ShopTARgv21.ApplicationServices.Services
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             var photos = await _dbContext.FileToDatabase
-                .Where(x => x.carId == id)
+                .Where(x => x.CarId == id)
                 .Select(y => new FileToDatabaseDto
                 {
                     Id = y.Id,
                     ImageTitle = y.ImageTitle,
-                    carId = y.carId
+                    CarId = y.CarId
                 })
                 .ToArrayAsync();
 
